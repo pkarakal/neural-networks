@@ -37,3 +37,12 @@ $ sudo apt install python3 python3-pip python3.9-venv python3.9-dev # ubuntu sti
     ```shell
    $ python3 -m nn
     ```
+4. (Optionally) You can also define some cli parameters to control the batch size, the number of epochs 
+or whether to save the model to file. To do so, you can run the application like so
+   ```shell
+   $ python3 -m nn --batch-size=N --epochs=M --save-model
+   ```
+5. (Optionally) You can also create a yaml file with the aforementioned parameters and just run the application like
+   ```shell
+   $ python3 -m nn -f <file_name>.yaml
+   ```
