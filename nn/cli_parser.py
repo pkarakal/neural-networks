@@ -12,6 +12,8 @@ class Parser:
                                help="define the number of cycles to use for training the data")
         self.parser.add_option("-s", "--save", action="store_true", dest="save_model",
                                help="define whether to save the trained model to file for later use")
+        self.parser.add_option("-l", "--layers", default=2, dest="layers",
+                               help="define the number of hidden layers. Must be between 2 and 4")
         self.parser.add_option("-f", "--file", dest="file", help="define the yaml file to read parameters from")
 
     def parseCLI(self, arguments=None):

@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import torch
 from torchvision import transforms
-from nn.utils import download_mnist_dataset, visualize_batch, visualize_image, train, evaluate
+from nn.utils import download_mnist_dataset, visualize_batch, visualize_image, train, evaluate, stopwatch
 from torch import nn
 from nn.MNIST import MNIST
 from nn.cli_parser import Parser
@@ -37,17 +37,17 @@ if __name__ == "__main__":
     visualize_batch(train_loader)
     # visualizes an image in more detail
     visualize_image(np.squeeze((next(iter(train_loader))[0])[0].numpy()))
-
-    mnist_model = MNIST(28*28, hidden_size1=512, hidden_size2=512, dropout_rate=0.2,
-                        output=10)
+    layers = cli.get("layers")
+    if layers > 4:
+        print(f"{layers} is greater than 4. Going to use 4 hidden layers")
+    mnist_model = MNIST(28 * 28, hidden_size1=512, hidden_size2=512, hidden_size3=128 if layers > 2 else None,
+                        hidden_size4=64 if layers > 3 else None, dropout_rate=0.2, output=10)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(mnist_model.parameters(), lr=0.002)
     images, labels = next(iter(train_loader))
     images = images.view(images.shape[0], -1)
     mnist_model.to(device)
-    train(model=mnist_model, device=device, train_loader=train_loader, criterion=criterion, optimizer=optimizer,
-          epochs=n_epochs)
-    evaluate(model=mnist_model, device=device, test_loader=test_loader, criterion=criterion, labels=labels)
-
+    print(f"Training took {stopwatch(lambda: train(model=mnist_model, device=device, train_loader=train_loader, criterion=criterion, optimizer=optimizer, epochs=n_epochs))}s")
+    print(f"Evaluation took {stopwatch(lambda: evaluate(model=mnist_model, device=device, test_loader=test_loader, criterion=criterion, labels=labels))}s")
     if cli.get('save_model'):
         torch.save(mnist_model.state_dict(), "mnist.pt")

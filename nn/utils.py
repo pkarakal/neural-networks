@@ -1,3 +1,5 @@
+import time
+
 from torch import max, no_grad
 from torchvision.datasets import MNIST
 from os import path
@@ -110,3 +112,10 @@ def evaluate(model, device, test_loader, criterion, labels):
         100. * np.sum(class_correct) / np.sum(class_total),
         np.sum(class_correct), np.sum(class_total)))
     return
+
+
+def stopwatch(func):
+    start = time.time()
+    func()
+    end = time.time()
+    return f"{end - start}"
